@@ -10,6 +10,17 @@ export const languages: { code: Language; label: string; nativeLabel: string }[]
 
 const translations: Record<Language, Record<string, string>> = {
   en: {
+    'nav.home': 'Home',
+    'nav.learnFinance': 'Learn Finance',
+    'nav.financialTools': 'Financial Tools',
+    'nav.marketplace': 'Marketplace',
+    'nav.ideaGenerator': 'Business Ideas',
+    'nav.riskAlerts': 'Risk Alerts',
+    'nav.emergencySupport': 'Emergency Support',
+    'nav.fundingSupport': 'Funding Support',
+    'nav.community': 'Community',
+    'nav.successStories': 'Success Stories',
+    'nav.loginRegister': 'Login / Register',
     'nav.challenges': 'Challenges',
     'nav.resources': 'Resources',
     'nav.stories': 'Stories',

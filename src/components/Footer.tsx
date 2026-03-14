@@ -4,7 +4,7 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border py-12">
       <div className="container mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
+        <div className="grid md:grid-cols-6 gap-8 mb-8">
           <div className="md:col-span-2">
             <h3 className="font-display text-xl font-bold text-foreground mb-3">
               Saksham<span className="text-primary">Nari</span>
@@ -14,19 +14,35 @@ const Footer = () => {
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-sm">Resources</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">Contact</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Financial Courses</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Loan Calculator</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Government Schemes</a></li>
+              <li><a href="mailto:support@sakshamnari.org" className="hover:text-foreground transition-colors">support@sakshamnari.org</a></li>
+              <li><a href="tel:+911800000000" className="hover:text-foreground transition-colors">+91 1800 000 000</a></li>
+              <li><a href="/community" className="hover:text-foreground transition-colors">Community Desk</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">Social Media</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><a href="#" className="hover:text-foreground transition-colors">Instagram</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">LinkedIn</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">YouTube</a></li>
             </ul>
           </div>
           <div>
             <h4 className="font-semibold text-foreground mb-3 text-sm">Support</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">Help Center</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Contact Us</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Community</a></li>
+              <li><a href="/help-support" className="hover:text-foreground transition-colors">Help Center</a></li>
+              <li><a href="/help-support" className="hover:text-foreground transition-colors">Contact Us</a></li>
+              <li><a href="/funding-support" className="hover:text-foreground transition-colors">Funding Support</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">FAQs</h4>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><a href="#" className="hover:text-foreground transition-colors">How to get started?</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">How loan guidance works?</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">Who can join?</a></li>
             </ul>
           </div>
         </div>

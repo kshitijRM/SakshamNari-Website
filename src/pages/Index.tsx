@@ -2,6 +2,8 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ProblemsSection from "@/components/ProblemsSection";
 import ResourcesSection from "@/components/ResourcesSection";
+import AIFinancialAdvisorSection from "@/components/AIFinancialAdvisorSection";
+import MultilingualSupportSection from "@/components/MultilingualSupportSection";
 import StoriesSection from "@/components/StoriesSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
@@ -13,6 +15,8 @@ const Index = () => {
       <HeroSection />
       <ProblemsSection />
       <ResourcesSection />
+      <AIFinancialAdvisorSection />
+      <MultilingualSupportSection />
       <StoriesSection />
       <CTASection />
       <Footer />

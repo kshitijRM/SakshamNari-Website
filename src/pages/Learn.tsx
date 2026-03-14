@@ -8,9 +8,72 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import Navbar from "@/components/Navbar";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, Trophy, Star, ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  BookOpen,
+  Trophy,
+  Star,
+  ArrowLeft,
+  CheckCircle2,
+  PiggyBank,
+  Percent,
+  Landmark,
+  TrendingUp,
+  Calculator,
+  Wallet,
+  Smartphone,
+  Building2,
+  BadgeCheck,
+  Gift,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+
+const hubSections = {
+  basicFinance: {
+    title: "Basic Finance Lessons",
+    items: [
+      { icon: PiggyBank, label: "Savings" },
+      { icon: Percent, label: "Interest rates" },
+      { icon: Landmark, label: "Loans" },
+      { icon: TrendingUp, label: "Investments" },
+    ],
+  },
+  entrepreneurFinance: {
+    title: "Entrepreneur Finance",
+    items: [
+      { icon: Calculator, label: "Business budgeting" },
+      { icon: Wallet, label: "Profit management" },
+      { icon: BookOpen, label: "Cost control" },
+    ],
+  },
+  digitalBanking: {
+    title: "Digital Banking Tutorials",
+    items: [
+      { icon: Smartphone, label: "How to use UPI" },
+      { icon: Building2, label: "How to open a bank account" },
+      { icon: Smartphone, label: "Mobile banking guides" },
+    ],
+  },
+};
+
+const quizQuestions = [
+  {
+    question: "If you save Rs. 1,000 every month, what helps your savings grow faster over time?",
+    options: ["No plan", "Compound interest", "Ignoring expenses", "Borrowing regularly"],
+    answer: "Compound interest",
+  },
+  {
+    question: "For small business profit management, what should be tracked every week?",
+    options: ["Only sales", "Only customer count", "Income and expenses", "Only social media posts"],
+    answer: "Income and expenses",
+  },
+  {
+    question: "What is the safest first step before using UPI with a new app?",
+    options: ["Share OTP", "Enable app lock and verify official app", "Use public Wi-Fi only", "Skip bank linking checks"],
+    answer: "Enable app lock and verify official app",
+  },
+];
 
 const Learn = () => {
   const { user } = useAuth();
@@ -23,6 +86,10 @@ const Learn = () => {
   const [profile, setProfile] = useState<any>(null);
   const [selectedLesson, setSelectedLesson] = useState<any>(null);
   const [completing, setCompleting] = useState(false);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [quizScore, setQuizScore] = useState(0);
+  const [quizCompleted, setQuizCompleted] = useState(false);
 
   const fetchData = async () => {
     if (!user) return;
@@ -89,6 +156,35 @@ const Learn = () => {
 
   const categories = [...new Set(lessons.map(l => l.category))];
 
+  const currentQuestion = quizQuestions[currentQuizIndex];
+  const rewardTier = totalPoints >= 500 ? "Gold Reward" : totalPoints >= 250 ? "Silver Reward" : "Starter Reward";
+
+  const submitQuizAnswer = () => {
+    if (!selectedOption) return;
+
+    if (selectedOption === currentQuestion.answer) {
+      setQuizScore((prev) => prev + 1);
+      toast({ title: "Correct", description: "Great answer. Keep learning." });
+    } else {
+      toast({ title: "Keep going", description: `Correct answer: ${currentQuestion.answer}` });
+    }
+
+    if (currentQuizIndex === quizQuestions.length - 1) {
+      setQuizCompleted(true);
+      return;
+    }
+
+    setCurrentQuizIndex((prev) => prev + 1);
+    setSelectedOption(null);
+  };
+
+  const resetQuiz = () => {
+    setCurrentQuizIndex(0);
+    setSelectedOption(null);
+    setQuizScore(0);
+    setQuizCompleted(false);
+  };
+
   if (selectedLesson) {
     return (
       <div className="min-h-screen bg-background">
@@ -136,12 +232,125 @@ const Learn = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <div className="container mx-auto px-6 pt-24 pb-12">
-        <div className="text-center mb-10">
-          <h1 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-2">
-            {t('learn.title', language)}
+        <div className="text-center mb-12">
+          <h1 className="font-display text-3xl md:text-5xl font-bold text-foreground mb-3">
+            Financial Learning Hub
           </h1>
-          <p className="text-muted-foreground">{t('learn.subtitle', language)}</p>
+          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            Purpose: Improve financial literacy through practical lessons, tutorials, and gamified learning.
+          </p>
         </div>
+
+        <div className="grid lg:grid-cols-3 gap-6 mb-12 max-w-6xl mx-auto">
+          <Card className="border-border/50">
+            <CardHeader>
+              <CardTitle className="font-display text-xl">{hubSections.basicFinance.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {hubSections.basicFinance.items.map((item) => (
+                <div key={item.label} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <item.icon className="h-4 w-4 text-primary" />
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50">
+            <CardHeader>
+              <CardTitle className="font-display text-xl">{hubSections.entrepreneurFinance.title}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {hubSections.entrepreneurFinance.items.map((item) => (
+                <div key={item.label} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <item.icon className="h-4 w-4 text-secondary" />
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-border/50">
+            <CardHeader>
+              <CardTitle className="font-display text-xl flex items-center justify-between gap-2">
+                <span>{hubSections.digitalBanking.title}</span>
+                <Button asChild variant="outline" size="sm">
+                  <Link to="/digital-literacy">Open Page</Link>
+                </Button>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {hubSections.digitalBanking.items.map((item) => (
+                <div key={item.label} className="flex items-center gap-3 text-sm text-muted-foreground">
+                  <item.icon className="h-4 w-4 text-accent" />
+                  <span>{item.label}</span>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="border-border/50 shadow-lg mb-12 max-w-4xl mx-auto" id="financial-tools">
+          <CardHeader>
+            <CardTitle className="font-display text-2xl">Gamified Learning</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {!quizCompleted ? (
+              <div className="space-y-5">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Quizzes: Question {currentQuizIndex + 1} of {quizQuestions.length}
+                  </p>
+                  <h3 className="font-semibold text-foreground">{currentQuestion.question}</h3>
+                </div>
+
+                <div className="grid sm:grid-cols-2 gap-3">
+                  {currentQuestion.options.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setSelectedOption(option)}
+                      className={`text-left rounded-lg border px-4 py-3 text-sm transition-colors ${
+                        selectedOption === option
+                          ? "border-primary bg-primary/10 text-foreground"
+                          : "border-border text-muted-foreground hover:text-foreground"
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+
+                <Button variant="hero" onClick={submitQuizAnswer} disabled={!selectedOption}>
+                  Submit Answer
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-5">
+                <div className="rounded-xl border border-success/30 bg-success/10 p-4">
+                  <p className="font-semibold text-success">
+                    Quiz completed: {quizScore} / {quizQuestions.length}
+                  </p>
+                </div>
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div className="rounded-xl border border-border p-4">
+                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <BadgeCheck className="h-4 w-4 text-primary" /> Badges
+                    </p>
+                    <p className="text-foreground font-semibold">Keep completing lessons to unlock more badges.</p>
+                  </div>
+                  <div className="rounded-xl border border-border p-4">
+                    <p className="text-sm text-muted-foreground mb-2 flex items-center gap-2">
+                      <Gift className="h-4 w-4 text-accent" /> Rewards
+                    </p>
+                    <p className="text-foreground font-semibold">Current reward tier: {rewardTier}</p>
+                  </div>
+                </div>
+                <Button variant="outline" onClick={resetQuiz}>Retry Quiz</Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         {/* Progress Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 max-w-3xl mx-auto">

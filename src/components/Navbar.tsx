@@ -26,22 +26,36 @@ const Navbar = () => {
         </Link>
 
         <div className="hidden md:flex items-center gap-6">
-          <a href="/#challenges" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            {t('nav.challenges', language)}
-          </a>
-          <a href="/#resources" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-            {t('nav.resources', language)}
-          </a>
-          {user && (
-            <>
-              <Link to="/learn" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('nav.learn', language)}
-              </Link>
-              <Link to="/leaderboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                {t('nav.leaderboard', language)}
-              </Link>
-            </>
-          )}
+          <Link to="/" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.home', language)}
+          </Link>
+          <Link to="/learn" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.learnFinance', language)}
+          </Link>
+          <Link to="/financial-tools" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.financialTools', language)}
+          </Link>
+          <Link to="/business-marketplace" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.marketplace', language)}
+          </Link>
+          <Link to="/business-idea-generator" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.ideaGenerator', language)}
+          </Link>
+          <Link to="/risk-alerts" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.riskAlerts', language)}
+          </Link>
+          <Link to="/emergency-support" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.emergencySupport', language)}
+          </Link>
+          <Link to="/funding-support" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.fundingSupport', language)}
+          </Link>
+          <Link to="/community" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.community', language)}
+          </Link>
+          <Link to="/success-stories" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            {t('nav.successStories', language)}
+          </Link>
           <LanguageSwitcher />
           {user ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="gap-2">
@@ -50,7 +64,7 @@ const Navbar = () => {
           ) : (
             <Link to="/auth">
               <Button variant="hero" size="sm" className="px-6">
-                {t('nav.getStarted', language)}
+                {t('nav.loginRegister', language)}
               </Button>
             </Link>
           )}
@@ -63,22 +77,36 @@ const Navbar = () => {
 
       {open && (
         <div className="md:hidden bg-background border-b border-border px-6 py-4 space-y-3">
-          <a href="/#challenges" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
-            {t('nav.challenges', language)}
-          </a>
-          <a href="/#resources" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
-            {t('nav.resources', language)}
-          </a>
-          {user && (
-            <>
-              <Link to="/learn" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
-                {t('nav.learn', language)}
-              </Link>
-              <Link to="/leaderboard" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
-                {t('nav.leaderboard', language)}
-              </Link>
-            </>
-          )}
+          <Link to="/" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.home', language)}
+          </Link>
+          <Link to="/learn" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.learnFinance', language)}
+          </Link>
+          <Link to="/financial-tools" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.financialTools', language)}
+          </Link>
+          <Link to="/business-marketplace" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.marketplace', language)}
+          </Link>
+          <Link to="/business-idea-generator" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.ideaGenerator', language)}
+          </Link>
+          <Link to="/risk-alerts" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.riskAlerts', language)}
+          </Link>
+          <Link to="/emergency-support" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.emergencySupport', language)}
+          </Link>
+          <Link to="/funding-support" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.fundingSupport', language)}
+          </Link>
+          <Link to="/community" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.community', language)}
+          </Link>
+          <Link to="/success-stories" className="block text-sm text-muted-foreground" onClick={() => setOpen(false)}>
+            {t('nav.successStories', language)}
+          </Link>
           <div className="py-2"><LanguageSwitcher /></div>
           {user ? (
             <Button variant="ghost" size="sm" onClick={handleSignOut} className="w-full justify-start gap-2">
@@ -86,7 +114,7 @@ const Navbar = () => {
             </Button>
           ) : (
             <Link to="/auth" onClick={() => setOpen(false)}>
-              <Button variant="hero" size="sm" className="w-full">{t('nav.getStarted', language)}</Button>
+              <Button variant="hero" size="sm" className="w-full">{t('nav.loginRegister', language)}</Button>
             </Link>
           )}
         </div>

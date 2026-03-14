@@ -1,36 +1,26 @@
 import { motion } from "framer-motion";
-import { BookOpen, Building2, ShieldAlert, Smartphone, Users } from "lucide-react";
+import { BrainCircuit, GraduationCap, Landmark, Smartphone } from "lucide-react";
 
-const problems = [
+const solutions = [
   {
-    icon: BookOpen,
-    title: "Financial Knowledge Gap",
-    description: "Many women lack awareness about savings, investments, loans, and interest rates.",
-    solution: "We provide simple, jargon-free financial education in local languages.",
+    icon: GraduationCap,
+    title: "Financial Education",
+    description: "Simple, local-language learning modules that make budgeting, savings, and planning practical.",
   },
   {
-    icon: Building2,
-    title: "Limited Banking Access",
-    description: "Traditional banks require collateral and complex documentation most women can't provide.",
-    solution: "We connect women to collateral-free microfinance and digital banking solutions.",
-  },
-  {
-    icon: ShieldAlert,
-    title: "Predatory Lending",
-    description: "Women often depend on informal moneylenders charging exploitative interest rates.",
-    solution: "We offer access to fair-rate community lending circles and government schemes.",
+    icon: Landmark,
+    title: "Loan Guidance",
+    description: "Step-by-step support to compare options, understand terms, and apply for fair lending programs.",
   },
   {
     icon: Smartphone,
-    title: "Low Digital Literacy",
-    description: "Difficulty understanding financial apps, online banking, and digital payments.",
-    solution: "Step-by-step guided tutorials designed for first-time digital users.",
+    title: "Digital Literacy",
+    description: "Hands-on support for digital payments, app safety, and managing finances confidently online.",
   },
   {
-    icon: Users,
-    title: "Gender Gap in Entrepreneurship",
-    description: "Women have fewer opportunities and financial support to start or scale businesses.",
-    solution: "Mentorship programs, seed funding access, and business skill workshops.",
+    icon: BrainCircuit,
+    title: "AI-based Financial Recommendations",
+    description: "Personalized suggestions for saving, borrowing, and business cash-flow decisions.",
   },
 ];
 
@@ -44,17 +34,38 @@ const ProblemsSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">The Challenge</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Problem Awareness</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Breaking Financial Barriers
+            Financial Challenges Women Face
           </h2>
           <p className="text-muted-foreground text-lg">
-            Millions of women entrepreneurs face systemic obstacles. We're here to change that.
+            Many women entrepreneurs face limited financial access, lack of trusted guidance, and low confidence with digital finance tools.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {problems.map((item, i) => (
+        <div className="grid lg:grid-cols-2 gap-10 items-start">
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="rounded-2xl bg-background p-8 border border-border"
+          >
+            <h3 className="font-display text-2xl font-semibold mb-4">What makes financial growth difficult?</h3>
+            <p className="text-muted-foreground mb-6">
+              Women often navigate informal lending, paperwork-heavy loan systems, and limited time for structured learning while managing work and home responsibilities.
+            </p>
+            <ul className="space-y-3 text-sm text-muted-foreground list-disc pl-5">
+              <li>Limited awareness of formal finance and government schemes</li>
+              <li>High dependence on expensive informal credit</li>
+              <li>Low access to digital tools and guidance</li>
+              <li>Few trusted, personalized recommendations</li>
+            </ul>
+          </motion.div>
+
+          <div>
+            <h3 className="font-display text-2xl font-semibold mb-6">Solutions Offered</h3>
+            <div className="grid sm:grid-cols-2 gap-6">
+          {solutions.map((item, i) => (
             <motion.div
               key={item.title}
               initial={{ opacity: 0, y: 30 }}
@@ -67,12 +78,11 @@ const ProblemsSection = () => {
                 <item.icon className="h-6 w-6" />
               </div>
               <h3 className="font-display text-xl font-semibold mb-2">{item.title}</h3>
-              <p className="text-muted-foreground text-sm mb-4">{item.description}</p>
-              <div className="rounded-lg bg-success/10 p-3">
-                <p className="text-sm text-success font-medium">✨ {item.solution}</p>
-              </div>
+              <p className="text-muted-foreground text-sm">{item.description}</p>
             </motion.div>
           ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>

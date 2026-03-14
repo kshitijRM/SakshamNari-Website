@@ -25,6 +25,7 @@ const stories = [
 const StoriesSection = () => {
   return (
     <section className="py-24 bg-card" id="stories">
+      <div id="community" className="relative -top-20" aria-hidden="true" />
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -32,12 +33,12 @@ const StoriesSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Real Impact</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Testimonials</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Stories of Change
+            Stories from Women Entrepreneurs
           </h2>
           <p className="text-muted-foreground text-lg">
-            Meet the women who transformed their lives through financial empowerment.
+            Real experiences from women who improved their financial health and business growth.
           </p>
         </motion.div>
 
