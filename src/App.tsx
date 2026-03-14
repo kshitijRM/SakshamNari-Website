@@ -1,9 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { AuthProvider } from "@/contexts/AuthContext";
+import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index.tsx";
 import Auth from "./pages/Auth.tsx";
@@ -26,6 +26,34 @@ import EmergencySupportNetwork from "./pages/EmergencySupportNetwork.tsx";
 
 const queryClient = new QueryClient();
 
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+};
+
+const GuestOnlyRoute = ({ children }: { children: JSX.Element }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
+
+  return children;
+};
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -35,23 +63,24 @@ const App = () => (
         <AuthProvider>
           <LanguageProvider>
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/learn" element={<Learn />} />
-              <Route path="/financial-tools" element={<FinancialTools />} />
-              <Route path="/funding-support" element={<FundingSupport />} />
-              <Route path="/community" element={<CommunityMentorship />} />
-              <Route path="/success-stories" element={<SuccessStories />} />
-              <Route path="/digital-literacy" element={<DigitalLiteracy />} />
-              <Route path="/help-support" element={<HelpSupport />} />
-              <Route path="/government-schemes" element={<GovernmentSchemeFinder />} />
-              <Route path="/micro-investments" element={<MicroInvestment />} />
-              <Route path="/credit-score-builder" element={<CreditScoreBuilder />} />
-              <Route path="/business-marketplace" element={<BusinessMarketplace />} />
-              <Route path="/business-idea-generator" element={<BusinessIdeaGenerator />} />
-              <Route path="/risk-alerts" element={<RiskAlertSystem />} />
-              <Route path="/emergency-support" element={<EmergencySupportNetwork />} />
-              <Route path="/leaderboard" element={<Leaderboard />} />
+              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/auth" element={<GuestOnlyRoute><Auth /></GuestOnlyRoute>} />
+              <Route path="/login" element={<GuestOnlyRoute><Auth /></GuestOnlyRoute>} />
+              <Route path="/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />
+              <Route path="/financial-tools" element={<ProtectedRoute><FinancialTools /></ProtectedRoute>} />
+              <Route path="/funding-support" element={<ProtectedRoute><FundingSupport /></ProtectedRoute>} />
+              <Route path="/community" element={<ProtectedRoute><CommunityMentorship /></ProtectedRoute>} />
+              <Route path="/success-stories" element={<ProtectedRoute><SuccessStories /></ProtectedRoute>} />
+              <Route path="/digital-literacy" element={<ProtectedRoute><DigitalLiteracy /></ProtectedRoute>} />
+              <Route path="/help-support" element={<ProtectedRoute><HelpSupport /></ProtectedRoute>} />
+              <Route path="/government-schemes" element={<ProtectedRoute><GovernmentSchemeFinder /></ProtectedRoute>} />
+              <Route path="/micro-investments" element={<ProtectedRoute><MicroInvestment /></ProtectedRoute>} />
+              <Route path="/credit-score-builder" element={<ProtectedRoute><CreditScoreBuilder /></ProtectedRoute>} />
+              <Route path="/business-marketplace" element={<ProtectedRoute><BusinessMarketplace /></ProtectedRoute>} />
+              <Route path="/business-idea-generator" element={<ProtectedRoute><BusinessIdeaGenerator /></ProtectedRoute>} />
+              <Route path="/risk-alerts" element={<ProtectedRoute><RiskAlertSystem /></ProtectedRoute>} />
+              <Route path="/emergency-support" element={<ProtectedRoute><EmergencySupportNetwork /></ProtectedRoute>} />
+              <Route path="/leaderboard" element={<ProtectedRoute><Leaderboard /></ProtectedRoute>} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </LanguageProvider>

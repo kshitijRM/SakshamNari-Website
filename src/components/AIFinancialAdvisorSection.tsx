@@ -4,6 +4,8 @@ import { Sparkles, Bot, Send, Mic, Volume2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/i18n";
 
 type ChatMessage = {
   role: "user" | "assistant";
@@ -19,6 +21,7 @@ const formatINR = (value: number) => {
 };
 
 const AIFinancialAdvisorSection = () => {
+  const { language } = useLanguage();
   const [monthlyIncome, setMonthlyIncome] = useState("25000");
   const [businessExpenses, setBusinessExpenses] = useState("12000");
   const [savingsAmount, setSavingsAmount] = useState("3000");
@@ -171,12 +174,12 @@ const AIFinancialAdvisorSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-14"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">AI Financial Advisor</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">{t("home.ai.badge", language)}</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Personalized Financial Guidance
+            {t("home.ai.title", language)}
           </h2>
           <p className="text-muted-foreground text-lg">
-            Purpose: Provide personalized financial guidance through an AI chatbot and recommendation engine.
+            {t("home.ai.subtitle", language)}
           </p>
         </motion.div>
 
@@ -184,51 +187,51 @@ const AIFinancialAdvisorSection = () => {
           <Card className="border-border/50 shadow-lg">
             <CardHeader>
               <CardTitle className="font-display text-2xl flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" /> Financial Recommendation Engine
+                <Sparkles className="h-5 w-5 text-primary" /> {t("home.ai.recommendationTitle", language)}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-5">
               <div className="grid sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Monthly income</label>
+                  <label className="text-sm font-medium text-foreground">{t("home.ai.monthlyIncome", language)}</label>
                   <Input
                     inputMode="numeric"
                     value={monthlyIncome}
                     onChange={(e) => setMonthlyIncome(e.target.value.replace(/[^\d]/g, ""))}
-                    placeholder="Enter monthly income"
+                    placeholder={t("home.ai.enterMonthlyIncome", language)}
                   />
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Business expenses</label>
+                  <label className="text-sm font-medium text-foreground">{t("home.ai.businessExpenses", language)}</label>
                   <Input
                     inputMode="numeric"
                     value={businessExpenses}
                     onChange={(e) => setBusinessExpenses(e.target.value.replace(/[^\d]/g, ""))}
-                    placeholder="Enter business expenses"
+                    placeholder={t("home.ai.enterBusinessExpenses", language)}
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Savings amount</label>
+                <label className="text-sm font-medium text-foreground">{t("home.ai.savingsAmount", language)}</label>
                 <Input
                   inputMode="numeric"
                   value={savingsAmount}
                   onChange={(e) => setSavingsAmount(e.target.value.replace(/[^\d]/g, ""))}
-                  placeholder="Enter savings amount"
+                  placeholder={t("home.ai.enterSavingsAmount", language)}
                 />
               </div>
 
               <div className="rounded-xl border border-border p-4 bg-card/50 space-y-3">
-                <h3 className="font-semibold text-foreground">Output</h3>
+                <h3 className="font-semibold text-foreground">{t("home.ai.output", language)}</h3>
                 <p className="text-sm text-muted-foreground">
-                  Savings suggestions: {recommendation.savingsSuggestion}
+                  {t("home.ai.savingsSuggestions", language)}: {recommendation.savingsSuggestion}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Loan eligibility estimate: {recommendation.loanEligibility} (approx. {formatINR(recommendation.estimatedLoan)})
+                  {t("home.ai.loanEstimate", language)}: {recommendation.loanEligibility} (approx. {formatINR(recommendation.estimatedLoan)})
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Budget planning: Ops {formatINR(recommendation.monthlyBusinessBudget.operations)} | Savings {formatINR(recommendation.monthlyBusinessBudget.savings)} | Growth {formatINR(recommendation.monthlyBusinessBudget.growth)} | Buffer {formatINR(recommendation.monthlyBusinessBudget.buffer)}
+                  {t("home.ai.budgetPlanning", language)}: Ops {formatINR(recommendation.monthlyBusinessBudget.operations)} | Savings {formatINR(recommendation.monthlyBusinessBudget.savings)} | Growth {formatINR(recommendation.monthlyBusinessBudget.growth)} | Buffer {formatINR(recommendation.monthlyBusinessBudget.buffer)}
                 </p>
               </div>
             </CardContent>
@@ -237,16 +240,16 @@ const AIFinancialAdvisorSection = () => {
           <Card className="border-border/50 shadow-lg">
             <CardHeader>
               <CardTitle className="font-display text-2xl flex items-center gap-2">
-                <Bot className="h-5 w-5 text-secondary" /> Voice-Based Financial Assistant
+                <Bot className="h-5 w-5 text-secondary" /> {t("home.ai.voiceTitle", language)}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="rounded-xl border border-border p-3 bg-card/50">
                 <p className="text-sm text-muted-foreground">
-                  Ask questions using speech and get audio responses explaining finance concepts.
+                  {t("home.ai.voiceHelp", language)}
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Example: "Tell me how to apply for a loan."
+                  {t("home.ai.voiceExample", language)}
                 </p>
               </div>
               <div className="h-72 overflow-auto rounded-xl border border-border p-4 bg-background space-y-3">
@@ -267,7 +270,7 @@ const AIFinancialAdvisorSection = () => {
                 <Input
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Ask about savings, loans, or budget planning"
+                  placeholder={t("home.ai.askPlaceholder", language)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
                       e.preventDefault();

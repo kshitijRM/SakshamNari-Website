@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { t } from "@/lib/i18n";
-import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Navbar from "@/components/Navbar";
 import { motion } from "framer-motion";
@@ -14,14 +13,23 @@ const Leaderboard = () => {
   const [profiles, setProfiles] = useState<any[]>([]);
 
   useEffect(() => {
-    supabase
-      .from('profiles')
-      .select('*')
-      .order('total_points', { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        if (data) setProfiles(data);
-      });
+    const usersRaw = localStorage.getItem("app_users");
+    const users = usersRaw ? JSON.parse(usersRaw) : [];
+
+    const computedProfiles = users.map((u: any) => {
+      const progressRaw = localStorage.getItem(`learn_progress_${u.id}`);
+      const progress = progressRaw ? JSON.parse(progressRaw) : [];
+      const total_points = progress.reduce((sum: number, item: any) => sum + (item.points_earned || 0), 0);
+
+      return {
+        id: u.id,
+        full_name: u.full_name,
+        total_points,
+      };
+    });
+
+    computedProfiles.sort((a: any, b: any) => b.total_points - a.total_points);
+    setProfiles(computedProfiles.slice(0, 50));
   }, []);
 
   const getRankIcon = (rank: number) => {

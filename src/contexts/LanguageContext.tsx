@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Language } from "@/lib/i18n";
 import { useAuth } from "./AuthContext";
-import { supabase } from "@/integrations/supabase/client";
 
 interface LanguageContextType {
   language: Language;
@@ -12,24 +11,23 @@ const LanguageContext = createContext<LanguageContextType>({ language: 'en', set
 
 export const useLanguage = () => useContext(LanguageContext);
 
+const getLanguageKey = (userId?: string) =>
+  userId ? `app_language_${userId}` : "app_language_guest";
+
 export const LanguageProvider = ({ children }: { children: ReactNode }) => {
   const [language, setLanguageState] = useState<Language>('en');
   const { user } = useAuth();
 
   useEffect(() => {
-    if (user) {
-      supabase.from('profiles').select('preferred_language').eq('id', user.id).single()
-        .then(({ data }) => {
-          if (data?.preferred_language) setLanguageState(data.preferred_language as Language);
-        });
+    const saved = localStorage.getItem(getLanguageKey(user?.id));
+    if (saved) {
+      setLanguageState(saved as Language);
     }
   }, [user]);
 
-  const setLanguage = async (lang: Language) => {
+  const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    if (user) {
-      await supabase.from('profiles').update({ preferred_language: lang }).eq('id', user.id);
-    }
+    localStorage.setItem(getLanguageKey(user?.id), lang);
   };
 
   return (

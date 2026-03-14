@@ -1,5 +1,7 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/i18n";
 
 const stories = [
   {
@@ -23,6 +25,8 @@ const stories = [
 ];
 
 const StoriesSection = () => {
+  const { language } = useLanguage();
+
   return (
     <section className="py-24 bg-card" id="stories">
       <div id="community" className="relative -top-20" aria-hidden="true" />
@@ -33,12 +37,12 @@ const StoriesSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Testimonials</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">{t("home.stories.badge", language)}</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Stories from Women Entrepreneurs
+            {t("home.stories.title", language)}
           </h2>
           <p className="text-muted-foreground text-lg">
-            Real experiences from women who improved their financial health and business growth.
+            {t("home.stories.subtitle", language)}
           </p>
         </motion.div>
 

@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { t, getLocalizedField } from "@/lib/i18n";
-import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -75,6 +74,51 @@ const quizQuestions = [
   },
 ];
 
+const LESSONS = [
+  {
+    id: "lesson-1",
+    category: "basics",
+    order_index: 1,
+    points_reward: 20,
+    title: "Savings Basics",
+    description: "Understand how regular savings build financial confidence.",
+    content: "Start by saving a fixed amount weekly. Track it, and increase gradually as your income stabilizes.",
+  },
+  {
+    id: "lesson-2",
+    category: "basics",
+    order_index: 2,
+    points_reward: 20,
+    title: "Interest Rates",
+    description: "Learn how interest impacts loans and deposits.",
+    content: "A lower interest rate usually means lower borrowing cost. Compare rates and processing fees together.",
+  },
+  {
+    id: "lesson-3",
+    category: "entrepreneurship",
+    order_index: 3,
+    points_reward: 30,
+    title: "Business Budgeting",
+    description: "Split business income across expenses, savings, and growth.",
+    content: "Use a simple monthly budget: operations, salaries, growth, and emergency buffer.",
+  },
+  {
+    id: "lesson-4",
+    category: "digital",
+    order_index: 4,
+    points_reward: 30,
+    title: "Safe Digital Payments",
+    description: "Use UPI and banking apps securely.",
+    content: "Never share OTP or PIN. Check recipient details before confirming payment.",
+  },
+];
+
+const BADGES = [
+  { id: "badge-1", name: "Starter", icon: "🌱", required_points: 20 },
+  { id: "badge-2", name: "Learner", icon: "📘", required_points: 50 },
+  { id: "badge-3", name: "Achiever", icon: "🏆", required_points: 100 },
+];
+
 const Learn = () => {
   const { user } = useAuth();
   const { language } = useLanguage();
@@ -83,7 +127,6 @@ const Learn = () => {
   const [progress, setProgress] = useState<any[]>([]);
   const [badges, setBadges] = useState<any[]>([]);
   const [userBadges, setUserBadges] = useState<any[]>([]);
-  const [profile, setProfile] = useState<any>(null);
   const [selectedLesson, setSelectedLesson] = useState<any>(null);
   const [completing, setCompleting] = useState(false);
   const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
@@ -91,20 +134,20 @@ const Learn = () => {
   const [quizScore, setQuizScore] = useState(0);
   const [quizCompleted, setQuizCompleted] = useState(false);
 
+  const storageKey = user ? `learn_progress_${user.id}` : "learn_progress_guest";
+  const badgeStorageKey = user ? `learn_badges_${user.id}` : "learn_badges_guest";
+
   const fetchData = async () => {
-    if (!user) return;
-    const [lessonsRes, progressRes, badgesRes, userBadgesRes, profileRes] = await Promise.all([
-      supabase.from('lessons').select('*').order('order_index'),
-      supabase.from('user_lesson_progress').select('*').eq('user_id', user.id),
-      supabase.from('badges').select('*').order('required_points'),
-      supabase.from('user_badges').select('*, badges(*)').eq('user_id', user.id),
-      supabase.from('profiles').select('*').eq('id', user.id).single(),
-    ]);
-    if (lessonsRes.data) setLessons(lessonsRes.data);
-    if (progressRes.data) setProgress(progressRes.data);
-    if (badgesRes.data) setBadges(badgesRes.data);
-    if (userBadgesRes.data) setUserBadges(userBadgesRes.data);
-    if (profileRes.data) setProfile(profileRes.data);
+    const storedProgressRaw = localStorage.getItem(storageKey);
+    const storedProgress = storedProgressRaw ? JSON.parse(storedProgressRaw) : [];
+
+    const storedBadgesRaw = localStorage.getItem(badgeStorageKey);
+    const storedBadgeIds = storedBadgesRaw ? JSON.parse(storedBadgesRaw) : [];
+
+    setLessons([...LESSONS].sort((a, b) => a.order_index - b.order_index));
+    setBadges([...BADGES].sort((a, b) => a.required_points - b.required_points));
+    setProgress(storedProgress);
+    setUserBadges(storedBadgeIds.map((id: string) => ({ badge_id: id })));
   };
 
   useEffect(() => { fetchData(); }, [user]);
@@ -112,26 +155,28 @@ const Learn = () => {
   const isCompleted = (lessonId: string) => progress.some(p => p.lesson_id === lessonId && p.completed);
 
   const completeLesson = async (lesson: any) => {
-    if (!user || isCompleted(lesson.id)) return;
+    if (isCompleted(lesson.id)) return;
     setCompleting(true);
 
-    await supabase.from('user_lesson_progress').upsert({
-      user_id: user.id,
+    const updatedProgress = [
+      ...progress,
+      {
       lesson_id: lesson.id,
       completed: true,
       completed_at: new Date().toISOString(),
       points_earned: lesson.points_reward,
-    });
+      },
+    ];
+    localStorage.setItem(storageKey, JSON.stringify(updatedProgress));
 
-    const newTotal = (profile?.total_points || 0) + lesson.points_reward;
-    await supabase.from('profiles').update({ total_points: newTotal }).eq('id', user.id);
+    const newTotal = updatedProgress.reduce((sum: number, item: any) => sum + (item.points_earned || 0), 0);
 
     // Check for new badges
     const earnedBadgeIds = userBadges.map(ub => ub.badge_id);
     const newBadges = badges.filter(b => b.required_points <= newTotal && !earnedBadgeIds.includes(b.id));
-    for (const badge of newBadges) {
-      await supabase.from('user_badges').insert({ user_id: user.id, badge_id: badge.id });
-    }
+
+    const updatedBadgeIds = [...new Set([...earnedBadgeIds, ...newBadges.map((b: any) => b.id)])];
+    localStorage.setItem(badgeStorageKey, JSON.stringify(updatedBadgeIds));
 
     toast({
       title: t('learn.congratulations', language),
@@ -151,7 +196,7 @@ const Learn = () => {
   };
 
   const completedCount = progress.filter(p => p.completed).length;
-  const totalPoints = profile?.total_points || 0;
+  const totalPoints = progress.reduce((sum, p) => sum + (p.points_earned || 0), 0);
   const progressPercent = lessons.length > 0 ? (completedCount / lessons.length) * 100 : 0;
 
   const categories = [...new Set(lessons.map(l => l.category))];

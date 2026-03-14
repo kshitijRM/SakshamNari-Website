@@ -1,6 +1,10 @@
 import { Heart } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/i18n";
 
 const Footer = () => {
+  const { language } = useLanguage();
+
   return (
     <footer className="bg-card border-t border-border py-12">
       <div className="container mx-auto px-6">
@@ -10,19 +14,19 @@ const Footer = () => {
               Saksham<span className="text-primary">Nari</span>
             </h3>
             <p className="text-muted-foreground text-sm max-w-sm">
-              Empowering women entrepreneurs with financial literacy, fair lending, and digital skills to build sustainable businesses.
+              {t("footer.about", language)}
             </p>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-sm">Contact</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">{t("footer.contact", language)}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="mailto:support@sakshamnari.org" className="hover:text-foreground transition-colors">support@sakshamnari.org</a></li>
-              <li><a href="tel:+911800000000" className="hover:text-foreground transition-colors">+91 1800 000 000</a></li>
-              <li><a href="/community" className="hover:text-foreground transition-colors">Community Desk</a></li>
+              <li><a href="mailto:support@kshitijdinni.me" className="hover:text-foreground transition-colors">support@kshitijdinni.me</a></li>
+              <li><a href="tel:+919272501980" className="hover:text-foreground transition-colors">+91 9272501980</a></li>
+              <li><a href="/community" className="hover:text-foreground transition-colors">{t("footer.communityDesk", language)}</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-sm">Social Media</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">{t("footer.social", language)}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="#" className="hover:text-foreground transition-colors">Instagram</a></li>
               <li><a href="#" className="hover:text-foreground transition-colors">LinkedIn</a></li>
@@ -30,27 +34,27 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-sm">Support</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">{t("footer.support", language)}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="/help-support" className="hover:text-foreground transition-colors">Help Center</a></li>
-              <li><a href="/help-support" className="hover:text-foreground transition-colors">Contact Us</a></li>
-              <li><a href="/funding-support" className="hover:text-foreground transition-colors">Funding Support</a></li>
+              <li><a href="/help-support" className="hover:text-foreground transition-colors">{t("footer.helpCenter", language)}</a></li>
+              <li><a href="/help-support" className="hover:text-foreground transition-colors">{t("footer.contactUs", language)}</a></li>
+              <li><a href="/funding-support" className="hover:text-foreground transition-colors">{t("footer.fundingSupport", language)}</a></li>
             </ul>
           </div>
           <div>
-            <h4 className="font-semibold text-foreground mb-3 text-sm">FAQs</h4>
+            <h4 className="font-semibold text-foreground mb-3 text-sm">{t("footer.faqs", language)}</h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
-              <li><a href="#" className="hover:text-foreground transition-colors">How to get started?</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">How loan guidance works?</a></li>
-              <li><a href="#" className="hover:text-foreground transition-colors">Who can join?</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">{t("footer.faqStart", language)}</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">{t("footer.faqLoan", language)}</a></li>
+              <li><a href="#" className="hover:text-foreground transition-colors">{t("footer.faqJoin", language)}</a></li>
             </ul>
           </div>
         </div>
         <div className="border-t border-border pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-sm text-muted-foreground flex items-center gap-1">
-            Made with <Heart className="h-3 w-3 text-primary" /> for women everywhere
+            {t("footer.madeWith", language)} <Heart className="h-3 w-3 text-primary" /> {t("footer.forWomen", language)}
           </p>
-          <p className="text-sm text-muted-foreground">© 2026 SakshamNari. All rights reserved.</p>
+          <p className="text-sm text-muted-foreground">© 2026 SakshamNari. {t("footer.rights", language)}</p>
         </div>
       </div>
     </footer>

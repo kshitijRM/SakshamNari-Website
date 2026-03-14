@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Mic, Languages, Volume2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Language, languages } from "@/lib/i18n";
+import { Language, languages, t } from "@/lib/i18n";
 
 const speechLangMap: Record<Language, string> = {
   en: "en-IN",
@@ -86,11 +86,11 @@ const wordMap: Record<Language, Record<string, string>> = {
 };
 
 const conceptLabels: Array<{ key: "savings" | "interest" | "loans" | "investments" | "upi"; label: string }> = [
-  { key: "savings", label: "Savings" },
-  { key: "interest", label: "Interest rates" },
-  { key: "loans", label: "Loans" },
-  { key: "investments", label: "Investments" },
-  { key: "upi", label: "Online payments (UPI)" },
+  { key: "savings", label: "home.multi.concept.savings" },
+  { key: "interest", label: "home.multi.concept.interest" },
+  { key: "loans", label: "home.multi.concept.loans" },
+  { key: "investments", label: "home.multi.concept.investments" },
+  { key: "upi", label: "home.multi.concept.upi" },
 ];
 
 const MultilingualSupportSection = () => {
@@ -154,11 +154,10 @@ const MultilingualSupportSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-3xl mx-auto mb-12"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Multilingual Language Support</p>
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">Inclusive Learning for Rural Women</h2>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">{t("home.multi.badge", language)}</p>
+          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">{t("home.multi.title", language)}</h2>
           <p className="text-muted-foreground text-lg">
-            Many rural women may not understand English. Use local language options, voice-based translation,
-            and audio explanations of financial concepts.
+            {t("home.multi.subtitle", language)}
           </p>
         </motion.div>
 
@@ -166,7 +165,7 @@ const MultilingualSupportSection = () => {
           <Card className="border-border/50 shadow-sm">
             <CardHeader>
               <CardTitle className="font-display text-2xl flex items-center gap-2">
-                <Languages className="h-5 w-5 text-primary" /> Multiple Language Options
+                <Languages className="h-5 w-5 text-primary" /> {t("home.multi.optionsTitle", language)}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -185,20 +184,20 @@ const MultilingualSupportSection = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-foreground">Voice-based translation</label>
+                <label className="text-sm font-medium text-foreground">{t("home.multi.voiceTranslation", language)}</label>
                 <div className="flex gap-2">
                   <Input
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
-                    placeholder="Speak or type: My savings and loan plan"
+                    placeholder={t("home.multi.speakPlaceholder", language)}
                   />
                   <Button type="button" variant="outline" onClick={startVoiceInput}>
                     <Mic className="h-4 w-4" />
                   </Button>
                 </div>
                 <div className="rounded-lg border border-border p-3 bg-background/60">
-                  <p className="text-xs text-muted-foreground mb-1">Translated preview</p>
-                  <p className="text-sm text-foreground">{translatedText || "Translation will appear here."}</p>
+                  <p className="text-xs text-muted-foreground mb-1">{t("home.multi.translatedPreview", language)}</p>
+                  <p className="text-sm text-foreground">{translatedText || t("home.multi.translatedEmpty", language)}</p>
                 </div>
               </div>
             </CardContent>
@@ -207,15 +206,15 @@ const MultilingualSupportSection = () => {
           <Card className="border-border/50 shadow-sm">
             <CardHeader>
               <CardTitle className="font-display text-2xl flex items-center gap-2">
-                <Volume2 className="h-5 w-5 text-secondary" /> Audio Explanations of Financial Concepts
+                <Volume2 className="h-5 w-5 text-secondary" /> {t("home.multi.audioTitle", language)}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {conceptLabels.map((concept) => (
                 <div key={concept.key} className="rounded-lg border border-border p-3 flex items-center justify-between gap-3">
-                  <span className="text-sm text-foreground">{concept.label}</span>
+                  <span className="text-sm text-foreground">{t(concept.label, language)}</span>
                   <Button type="button" variant="outline" size="sm" onClick={() => speakConcept(concept.key)}>
-                    <Volume2 className="h-4 w-4" /> Play
+                    <Volume2 className="h-4 w-4" /> {t("home.multi.play", language)}
                   </Button>
                 </div>
               ))}

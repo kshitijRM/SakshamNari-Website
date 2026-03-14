@@ -1,30 +1,34 @@
 import { motion } from "framer-motion";
 import { BrainCircuit, GraduationCap, Landmark, Smartphone } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { t } from "@/lib/i18n";
 
 const solutions = [
   {
     icon: GraduationCap,
-    title: "Financial Education",
-    description: "Simple, local-language learning modules that make budgeting, savings, and planning practical.",
+    titleKey: "home.solution.education.title",
+    descriptionKey: "home.solution.education.description",
   },
   {
     icon: Landmark,
-    title: "Loan Guidance",
-    description: "Step-by-step support to compare options, understand terms, and apply for fair lending programs.",
+    titleKey: "home.solution.loan.title",
+    descriptionKey: "home.solution.loan.description",
   },
   {
     icon: Smartphone,
-    title: "Digital Literacy",
-    description: "Hands-on support for digital payments, app safety, and managing finances confidently online.",
+    titleKey: "home.solution.digital.title",
+    descriptionKey: "home.solution.digital.description",
   },
   {
     icon: BrainCircuit,
-    title: "AI-based Financial Recommendations",
-    description: "Personalized suggestions for saving, borrowing, and business cash-flow decisions.",
+    titleKey: "home.solution.ai.title",
+    descriptionKey: "home.solution.ai.description",
   },
 ];
 
 const ProblemsSection = () => {
+  const { language } = useLanguage();
+
   return (
     <section className="py-24 bg-card" id="challenges">
       <div className="container mx-auto px-6">
@@ -34,12 +38,12 @@ const ProblemsSection = () => {
           viewport={{ once: true }}
           className="text-center max-w-2xl mx-auto mb-16"
         >
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">Problem Awareness</p>
+          <p className="text-sm font-semibold uppercase tracking-wider text-primary mb-3">{t("home.problems.badge", language)}</p>
           <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Financial Challenges Women Face
+            {t("home.problems.title", language)}
           </h2>
           <p className="text-muted-foreground text-lg">
-            Many women entrepreneurs face limited financial access, lack of trusted guidance, and low confidence with digital finance tools.
+            {t("home.problems.subtitle", language)}
           </p>
         </motion.div>
 
@@ -50,24 +54,24 @@ const ProblemsSection = () => {
             viewport={{ once: true }}
             className="rounded-2xl bg-background p-8 border border-border"
           >
-            <h3 className="font-display text-2xl font-semibold mb-4">What makes financial growth difficult?</h3>
+            <h3 className="font-display text-2xl font-semibold mb-4">{t("home.problems.cardTitle", language)}</h3>
             <p className="text-muted-foreground mb-6">
-              Women often navigate informal lending, paperwork-heavy loan systems, and limited time for structured learning while managing work and home responsibilities.
+              {t("home.problems.cardSubtitle", language)}
             </p>
             <ul className="space-y-3 text-sm text-muted-foreground list-disc pl-5">
-              <li>Limited awareness of formal finance and government schemes</li>
-              <li>High dependence on expensive informal credit</li>
-              <li>Low access to digital tools and guidance</li>
-              <li>Few trusted, personalized recommendations</li>
+              <li>{t("home.problems.point1", language)}</li>
+              <li>{t("home.problems.point2", language)}</li>
+              <li>{t("home.problems.point3", language)}</li>
+              <li>{t("home.problems.point4", language)}</li>
             </ul>
           </motion.div>
 
           <div>
-            <h3 className="font-display text-2xl font-semibold mb-6">Solutions Offered</h3>
+            <h3 className="font-display text-2xl font-semibold mb-6">{t("home.problems.solutionsTitle", language)}</h3>
             <div className="grid sm:grid-cols-2 gap-6">
           {solutions.map((item, i) => (
             <motion.div
-              key={item.title}
+              key={item.titleKey}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -77,8 +81,8 @@ const ProblemsSection = () => {
               <div className="mb-5 inline-flex items-center justify-center h-12 w-12 rounded-xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
                 <item.icon className="h-6 w-6" />
               </div>
-              <h3 className="font-display text-xl font-semibold mb-2">{item.title}</h3>
-              <p className="text-muted-foreground text-sm">{item.description}</p>
+              <h3 className="font-display text-xl font-semibold mb-2">{t(item.titleKey, language)}</h3>
+              <p className="text-muted-foreground text-sm">{t(item.descriptionKey, language)}</p>
             </motion.div>
           ))}
             </div>
