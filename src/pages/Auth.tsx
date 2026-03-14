@@ -78,7 +78,7 @@ const Auth = () => {
 
     try {
       await axios
-        .post("http://localhost:5000/signup", {
+        .post("https://sakshamnari.live/login", {
           name: cleanName,
           email: cleanEmail,
           password: cleanPassword,

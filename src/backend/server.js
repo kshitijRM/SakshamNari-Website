@@ -7,11 +7,19 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Railway template:
+// const db = mysql.createConnection({
+//   host: "railway_host",
+//   user: "railway_user",
+//   password: "railway_password",
+//   database: "railway_db"
+// });
+
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "viteDB"
+  host: process.env.MYSQL_HOST || "localhost",
+  user: process.env.MYSQL_USER || "root",
+  password: process.env.MYSQL_PASSWORD || "",
+  database: process.env.MYSQL_DATABASE || "viteDB"
 });
 
 db.connect((err) => {
@@ -59,6 +67,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
