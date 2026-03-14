@@ -4,51 +4,58 @@ const cors = require("cors");
 
 const app = express();
 
+/* ---------------- Middleware ---------------- */
 app.use(cors());
 app.use(express.json());
 
-// Railway template:
-// const db = mysql.createConnection({
-//   host: "railway_host",
-//   user: "railway_user",
-//   password: "railway_password",
-//   database: "railway_db"
-// });
+/* ---------------- Port ---------------- */
+const PORT = process.env.PORT || 8080;
 
+/* ---------------- Database Connection ---------------- */
 const db = mysql.createConnection({
   host: process.env.MYSQL_HOST || "localhost",
   user: process.env.MYSQL_USER || "root",
   password: process.env.MYSQL_PASSWORD || "",
-  database: process.env.MYSQL_DATABASE || "viteDB"
+  database: process.env.MYSQL_DATABASE || "viteDB",
+  port: process.env.MYSQL_PORT || 3306
 });
 
 db.connect((err) => {
   if (err) {
-    console.log("Database connection failed:", err);
+    console.error("❌ Database connection failed:", err);
   } else {
-    console.log("MySQL Connected");
+    console.log("✅ MySQL Connected");
   }
 });
 
+/* ---------------- Test Route ---------------- */
 app.get("/", (req, res) => {
-  res.send("Backend running");
+  res.json({
+    message: "SakshamNari Backend Running 🚀"
+  });
 });
 
+/* ---------------- Signup ---------------- */
 app.post("/signup", (req, res) => {
   const { name, email, password } = req.body;
+
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "All fields required" });
+  }
 
   const sql = "INSERT INTO users (name,email,password) VALUES (?,?,?)";
 
   db.query(sql, [name, email, password], (err, result) => {
     if (err) {
-      console.log(err);
-      res.send("Signup failed");
-    } else {
-      res.send("User registered");
+      console.error(err);
+      return res.status(500).json({ message: "Signup failed" });
     }
+
+    res.json({ message: "User registered successfully" });
   });
 });
 
+/* ---------------- Login ---------------- */
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
 
@@ -56,17 +63,19 @@ app.post("/login", (req, res) => {
 
   db.query(sql, [email, password], (err, result) => {
     if (err) {
-      res.send("Login error");
+      console.error(err);
+      return res.status(500).json({ message: "Login error" });
+    }
+
+    if (result.length > 0) {
+      res.json({ message: "Login successful", user: result[0] });
     } else {
-      if (result.length > 0) {
-        res.send("Login successful");
-      } else {
-        res.send("Invalid email or password");
-      }
+      res.status(401).json({ message: "Invalid email or password" });
     }
   });
 });
 
+/* ---------------- Start Server ---------------- */
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
