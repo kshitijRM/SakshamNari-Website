@@ -11,7 +11,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { t } from "@/lib/i18n";
 import axios from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://sakshamnari.live";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const SIGNUP_ENDPOINT = API_BASE_URL ? `${API_BASE_URL}/signup` : "/api/signup";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -79,16 +80,27 @@ const Auth = () => {
     }
 
     try {
-      await axios.post(`${API_BASE_URL}/signup`, {
+      const response = await axios.post(SIGNUP_ENDPOINT, {
         name: cleanName,
         email: cleanEmail,
         password: cleanPassword,
       });
+
+      const isExpectedStatus = response.status === 200 || response.status === 201;
+      const responseMessage =
+        typeof response.data === "string"
+          ? response.data.toLowerCase()
+          : String(response.data?.message || "").toLowerCase();
+      const looksLikeSignupSuccess = responseMessage.includes("registered") || responseMessage.includes("success");
+
+      if (!isExpectedStatus || !looksLikeSignupSuccess) {
+        throw new Error("Signup was not saved in database.");
+      }
     } catch (error: any) {
-      const serverMessage = error?.response?.data?.message || error?.message;
+      const serverMessage = error?.response?.data?.message || error?.message || "Could not connect to signup server.";
       toast({
         title: t("auth.signupFailedTitle", language),
-        description: serverMessage || "Could not connect to signup server.",
+        description: serverMessage,
         variant: "destructive",
       });
       setSubmitting(false);

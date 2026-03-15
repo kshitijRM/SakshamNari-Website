@@ -44,10 +44,13 @@ app.post("/signup", (req, res) => {
 
   db.query(sql, [name, email, password], (err, result) => {
     if (err) {
-      return res.send(err);
+      if (err.code === "ER_DUP_ENTRY") {
+        return res.status(409).json({ message: "Email already registered" });
+      }
+      return res.status(500).json({ message: "Signup failed", error: err.message });
     }
 
-    res.send("User registered successfully");
+    res.status(201).json({ message: "User registered successfully", userId: result.insertId });
   });
 });
 
@@ -59,13 +62,13 @@ app.post("/login", (req, res) => {
 
   db.query(sql, [email, password], (err, result) => {
     if (err) {
-      return res.send(err);
+      return res.status(500).json({ message: "Login failed", error: err.message });
     }
 
     if (result.length > 0) {
-      res.send(result);
+      res.status(200).json({ message: "Login successful", user: result[0] });
     } else {
-      res.send("Invalid email or password");
+      res.status(401).json({ message: "Invalid email or password" });
     }
   });
 });
