@@ -1,44 +1,28 @@
 const express = require("express");
-const mysql = require("mysql2");
 const cors = require("cors");
 const { Pool } = require("pg");
 
 const app = express();
 
-
+/* ---------------- Database ---------------- */
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
 });
 
 /* ---------------- Middleware ---------------- */
 app.use(cors({
-  origin: ["https://sakshamnari.live", "http://localhost:5173", "http://localhost:8080"],
-  methods: ["GET", "POST", "OPTIONS"],
+  origin: ["https://sakshamnari.live", "http://localhost:5173"],
+  methods: ["GET", "POST"],
   allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
 app.use(express.json());
 
 /* ---------------- Port ---------------- */
 const PORT = process.env.PORT || 5000;
-
-/* ---------------- Database Connection ---------------- */
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "vitedb"
-});
-
-db.connect((err) => {
-  if (err) {
-    console.error("Database connection failed:", err);
-  } else {
-    console.log("MySQL Connected");
-  }
-});
 
 /* ---------------- Test Route ---------------- */
 app.get("/", (req, res) => {
@@ -46,43 +30,56 @@ app.get("/", (req, res) => {
 });
 
 /* ---------------- Signup ---------------- */
-app.post("/signup", (req, res) => {
+app.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
 
-  const sql = "INSERT INTO users (name,email,password) VALUES (?,?,?)";
+  try {
+    const result = await pool.query(
+      "INSERT INTO users(name,email,password) VALUES($1,$2,$3) RETURNING *",
+      [name, email, password]
+    );
 
-  db.query(sql, [name, email, password], (err, result) => {
-    if (err) {
-      if (err.code === "ER_DUP_ENTRY") {
-        return res.status(409).json({ message: "Email already registered" });
-      }
-      return res.status(500).json({ message: "Signup failed", error: err.message });
+    res.status(201).json({
+      message: "User registered successfully",
+      user: result.rows[0],
+    });
+
+  } catch (err) {
+
+    if (err.code === "23505") {
+      return res.status(409).json({ message: "Email already registered" });
     }
 
-    res.status(201).json({ message: "User registered successfully", userId: result.insertId });
-  });
+    res.status(500).json({ message: "Signup failed", error: err.message });
+  }
 });
 
 /* ---------------- Login ---------------- */
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  const sql = "SELECT * FROM users WHERE email=? AND password=?";
+  try {
 
-  db.query(sql, [email, password], (err, result) => {
-    if (err) {
-      return res.status(500).json({ message: "Login failed", error: err.message });
-    }
+    const result = await pool.query(
+      "SELECT * FROM users WHERE email=$1 AND password=$2",
+      [email, password]
+    );
 
-    if (result.length > 0) {
-      res.status(200).json({ message: "Login successful", user: result[0] });
+    if (result.rows.length > 0) {
+      res.status(200).json({
+        message: "Login successful",
+        user: result.rows[0],
+      });
     } else {
       res.status(401).json({ message: "Invalid email or password" });
     }
-  });
+
+  } catch (err) {
+    res.status(500).json({ message: "Login failed", error: err.message });
+  }
 });
 
 /* ---------------- Start Server ---------------- */
 app.listen(PORT, () => {
-  console.log("Server running");
+  console.log(`Server running on port ${PORT}`);
 });
