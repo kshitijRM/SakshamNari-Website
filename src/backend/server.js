@@ -5,7 +5,11 @@ const cors = require("cors");
 const app = express();
 
 /* ---------------- Middleware ---------------- */
-app.use(cors());
+app.use(cors({
+  origin: ["https://sakshamnari.live", "http://localhost:5173", "http://localhost:8080"],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+}));
 app.use(express.json());
 
 /* ---------------- Port ---------------- */
