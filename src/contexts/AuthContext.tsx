@@ -41,7 +41,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const raw = localStorage.getItem("app_current_user");
+    // Clear legacy persisted auth and only restore from the active browser session.
+    localStorage.removeItem("app_current_user");
+    const raw = sessionStorage.getItem("app_current_user");
     if (raw) {
       const parsed = safeParse(raw, null) as AppUser | null;
       if (parsed?.id && parsed?.email) {
@@ -116,7 +118,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       full_name: found.full_name,
     };
 
-    localStorage.setItem("app_current_user", JSON.stringify(safeUser));
+    sessionStorage.setItem("app_current_user", JSON.stringify(safeUser));
     setUser(safeUser);
     setSession({ user: safeUser });
 
@@ -124,7 +126,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signOut = async () => {
-    localStorage.removeItem("app_current_user");
+    sessionStorage.removeItem("app_current_user");
     setUser(null);
     setSession(null);
   };

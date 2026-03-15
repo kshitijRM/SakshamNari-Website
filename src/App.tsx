@@ -40,6 +40,16 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
   return children;
 };
 
+const RootRoute = () => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return null;
+  }
+
+  return <Navigate to={user ? "/dashboard" : "/login"} replace />;
+};
+
 const GuestOnlyRoute = ({ children }: { children: JSX.Element }) => {
   const { user, loading } = useAuth();
 
@@ -48,7 +58,7 @@ const GuestOnlyRoute = ({ children }: { children: JSX.Element }) => {
   }
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
@@ -63,7 +73,8 @@ const App = () => (
         <AuthProvider>
           <LanguageProvider>
             <Routes>
-              <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/" element={<RootRoute />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/auth" element={<GuestOnlyRoute><Auth /></GuestOnlyRoute>} />
               <Route path="/login" element={<GuestOnlyRoute><Auth /></GuestOnlyRoute>} />
               <Route path="/learn" element={<ProtectedRoute><Learn /></ProtectedRoute>} />

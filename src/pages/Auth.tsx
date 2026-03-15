@@ -11,6 +11,8 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { t } from "@/lib/i18n";
 import axios from "axios";
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "https://sakshamnari.live";
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [fullName, setFullName] = useState("");
@@ -72,28 +74,21 @@ const Auth = () => {
         description: t("auth.welcomeBackShort", language),
       });
       setSubmitting(false);
-      navigate("/");
+      navigate("/dashboard");
       return;
     }
 
     try {
-      await axios
-        .post("https://sakshamnari.live/login", {
-          name: cleanName,
-          email: cleanEmail,
-          password: cleanPassword,
-        })
-        .then((res) => {
-          alert(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-          throw err;
-        });
-    } catch {
+      await axios.post(`${API_BASE_URL}/signup`, {
+        name: cleanName,
+        email: cleanEmail,
+        password: cleanPassword,
+      });
+    } catch (error: any) {
+      const serverMessage = error?.response?.data?.message || error?.message;
       toast({
         title: t("auth.signupFailedTitle", language),
-        description: "Could not connect to signup server.",
+        description: serverMessage || "Could not connect to signup server.",
         variant: "destructive",
       });
       setSubmitting(false);
@@ -131,7 +126,7 @@ const Auth = () => {
 
     setEmail(cleanEmail);
     setSubmitting(false);
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
@@ -147,7 +142,7 @@ const Auth = () => {
           <Card className="border-border/50 shadow-xl hidden lg:flex">
             <CardContent className="p-8 flex flex-col justify-between">
               <div>
-                <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                   <ArrowLeft className="h-4 w-4" /> {t("auth.backToHome", language)}
                 </Link>
                 <h1 className="font-display text-4xl font-bold mt-8 leading-tight text-foreground">
@@ -167,11 +162,11 @@ const Auth = () => {
           <Card className="border-border/50 shadow-xl">
             <CardHeader className="space-y-4">
               <div className="lg:hidden">
-                <Link to="/" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+                <Link to="/dashboard" className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
                   <ArrowLeft className="h-4 w-4" /> {t("auth.backToHome", language)}
                 </Link>
               </div>
-              <a href="/" className="font-display text-2xl font-bold text-foreground text-center">
+              <a href="/dashboard" className="font-display text-2xl font-bold text-foreground text-center">
                 Saksham<span className="text-primary">Nari</span>
               </a>
 
